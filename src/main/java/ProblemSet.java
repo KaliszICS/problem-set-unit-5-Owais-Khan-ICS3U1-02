@@ -11,18 +11,18 @@ public class ProblemSet {
 		String userInput = input.nextLine().toLowerCase();
 
 		int characters = userInput.length();
-		int spaces = characters - userInput.replace(" ", "").length(); // I might just use a for loop for this.
-		int vowels = 0;
+		int spaceCount = characters - userInput.replace(" ", "").length(); // I might just use a for loop for this.
+		int vowelCount = 0;
 
 		for (int i = 0; i < userInput.length(); i++) {
 			if ("aeiou".contains(userInput.charAt(i))) {
-				vowels++;
+				vowelCount++;
 			}
 		}
 
 		inputArray = userInput.split(" ");
 
-		int words = inputArray.length;
+		int wordCount = inputArray.length;
 
 		ArrayList<String> longestWords = new ArrayList<String>();
 		int longestWordsLength = 0;
@@ -31,15 +31,15 @@ public class ProblemSet {
 		int shortestWordsLength = inputArray[0].length();
 
 
-		double average = (characters-spaces)/words; // placeholder
-		int sentences;
+		double averageLength = (characters-spaceCount)/wordCount; // placeholder
+		int sentenceCount;
 
 		HashMap<String, Integer> frequencies = new HashMap<String, Integer>();
 		for (int i = 0; i < inputArray.length; i++) {
 			String word = inputArray[i];
 
 			if (word.endsWith(".") || word.endsWith("!") || word.endsWith("?")) {
-				sentences++;
+				sentenceCount++;
 			}
 
 			char lastletter = word.charAt(word.length()-1);
