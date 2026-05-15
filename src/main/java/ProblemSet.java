@@ -1,74 +1,97 @@
-import java.util.scanner;
+import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 
 public class ProblemSet {
 
+	static ArrayList<String> longestWords = new ArrayList<String>();
+	static int longestWordsLength = 0;
+	static ArrayList<String> shortestWords = new ArrayList<String>();
+	static int shortestWordsLength;
+
 	public static void main(String args[]) {
-		Scanner input = new Scanner(System.in());
+		Scanner input = new Scanner(System.in);
 		System.out.println("Welcome to the Text Analyzer.\nPlease enter a sentence or paragraph:\n");
 		String userInput = input.nextLine().toLowerCase();
 
 		int characters = userInput.length();
-		int spaceCount = characters - userInput.replace(" ", "").length(); // I might just use a for loop for this.
+		int spaceCount = 0;
 		int vowelCount = 0;
 
 		for (int i = 0; i < userInput.length(); i++) {
-			if ("aeiou".contains(userInput.charAt(i))) {
+			char letter = userInput.charAt(i);
+
+			if ("aeiou".indexOf(letter) > -1) {
 				vowelCount++;
+			}
+			else if (letter == ' ') {
+				spaceCount++;
 			}
 		}
 
-		inputArray = userInput.split(" ");
+		String[] inputArray = userInput.split(" ");
 
 		int wordCount = inputArray.length;
 
-		ArrayList<String> longestWords = new ArrayList<String>();
-		int longestWordsLength = 0;
-		ArrayList<String> shortestWords = new ArrayList<String>();
+		shortestWordsLength = inputArray[0].length();
 		shortestWords.add(inputArray[0]);
-		int shortestWordsLength = inputArray[0].length();
 
+		double averageLength = (double)(characters-spaceCount)/wordCount; // placeholder
+		int sentenceCount = userInput.split("[.?!]").length;
 
-		double averageLength = (characters-spaceCount)/wordCount; // placeholder
-		int sentenceCount;
+		inputArray.remove()
 
 		HashMap<String, Integer> frequencies = new HashMap<String, Integer>();
 		for (int i = 0; i < inputArray.length; i++) {
 			String word = inputArray[i];
 
-			if (word.endsWith(".") || word.endsWith("!") || word.endsWith("?")) {
-				sentenceCount++;
-			}
+			frequencies.put(word, frequencies.getOrDefault(word, 0) + 1);
+			
+			findLongestWord(word);
+			findShortestWord(word);
 
-			char lastletter = word.charAt(word.length()-1);
-			if (lastletter >= 'a' && lastletter <= 'z') {
-				word = word.substring(0, word.length()-2);
-			}
+		}
 
-			map.put(key, map.getOrDefault(key, 0) + 1);
-			if (word.length() > longestWordsLength) {
+		System.out.println("Total Characters:" + characters
+						   + "\nTotal Words:" + wordCount
+						   + "\nTotal Vowels:" + vowelCount
+						   + "\nTotal Spaces:" + spaceCount);
+
+		System.out.println("\nWord Frequency:\n");
+		for (String word: frequencies.keySet()) {
+			System.out.println(word + " - " + frequencies.get(word));
+		}
+
+		System.out.println("Longest Word: " + longestWords.toString()
+						   + "\nShortest Word: " + shortestWords.toString()
+						   + "\nAverage Word Length: " + averageLength
+						   + "\nNumber of Sentences: " + sentenceCount
+						   + "\nUnique Words: " + frequencies.size()
+		);
+
+	}
+
+	public static void findLongestWord(String word) {
+		if (word.length() > longestWordsLength) {
 				longestWordsLength = word.length();
 				longestWords.clear();;
 				longestWords.add(word);
 			} else if (word.length() == longestWordsLength) {
 				longestWords.add(word);
 			}
+	}
 
-			if (word.length() < shortestWordsLength) {
+	public static void findShortestWord(String word) {
+		if (word.length() < shortestWordsLength) {
 				shortestWordsLength = word.length();
 				shortestWords.clear();;
 				shortestWords.add(word);
 			} else if (word.length() == shortestWordsLength) {
 				shortestWords.add(word);
 			}
-
-		}
-
-
-
-
 	}
+
+
 
 }
