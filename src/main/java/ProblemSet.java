@@ -5,11 +5,6 @@ import java.util.HashMap;
 
 public class ProblemSet {
 
-	static ArrayList<String> longestWords = new ArrayList<String>();
-	static int longestWordsLength = 0;
-	static ArrayList<String> shortestWords = new ArrayList<String>();
-	static int shortestWordsLength;
-
 	public static void main(String args[]) {
 		Scanner input = new Scanner(System.in);
 		System.out.println("Welcome to the Text Analyzer.\nPlease enter a sentence or paragraph:\n");
@@ -30,28 +25,16 @@ public class ProblemSet {
 			}
 		}
 
-		String[] inputArray = userInput.split(" ");
+		String[] words = userInput.split(" ");
 
-		int wordCount = inputArray.length;
+		int wordCount = words.length;
 
-		shortestWordsLength = inputArray[0].length();
-		shortestWords.add(inputArray[0]);
+		shortestWordsLength = words[0].length();
+		shortestWords.add(words[0]);
 
 		double averageLength = (double)(characters-spaceCount)/wordCount; // placeholder
 		int sentenceCount = userInput.split("[.?!]").length;
 
-		inputArray.remove()
-
-		HashMap<String, Integer> frequencies = new HashMap<String, Integer>();
-		for (int i = 0; i < inputArray.length; i++) {
-			String word = inputArray[i];
-
-			frequencies.put(word, frequencies.getOrDefault(word, 0) + 1);
-			
-			findLongestWord(word);
-			findShortestWord(word);
-
-		}
 
 		System.out.println("Total Characters:" + characters
 						   + "\nTotal Words:" + wordCount
@@ -63,7 +46,7 @@ public class ProblemSet {
 			System.out.println(word + " - " + frequencies.get(word));
 		}
 
-		System.out.println("Longest Word: " + longestWords.toString()
+		System.out.println("Longest Word: " + findLongestWord(words)
 						   + "\nShortest Word: " + shortestWords.toString()
 						   + "\nAverage Word Length: " + averageLength
 						   + "\nNumber of Sentences: " + sentenceCount
@@ -72,26 +55,45 @@ public class ProblemSet {
 
 	}
 
-	public static void findLongestWord(String word) {
-		if (word.length() > longestWordsLength) {
-				longestWordsLength = word.length();
-				longestWords.clear();;
-				longestWords.add(word);
+	public static String findLongestWord(String[] words) {
+		ArrayList<String> longestWords = new ArrayList<String>();
+		int longestWordsLength = 0;
+		for (String word: words) {
+			if (word.length() > longestWordsLength) {
+					longestWordsLength = word.length();
+					longestWords.clear();;
+					longestWords.add(word);
 			} else if (word.length() == longestWordsLength) {
 				longestWords.add(word);
 			}
+		}
+
+		return longestWords.toString().replaceAll("[\\[\\]]", "");
 	}
 
-	public static void findShortestWord(String word) {
-		if (word.length() < shortestWordsLength) {
-				shortestWordsLength = word.length();
-				shortestWords.clear();;
-				shortestWords.add(word);
+	public static String findShortestWord(String[] words) {
+		ArrayList<String> shortestWords = new ArrayList<String>();
+		int shortestWordsLength;
+
+		for (String word: words) {
+			if (word.length() < shortestWordsLength) {
+					shortestWordsLength = word.length();
+					shortestWords.clear();;
+					shortestWords.add(word);
 			} else if (word.length() == shortestWordsLength) {
 				shortestWords.add(word);
 			}
+		}
+		return shortestWords.toString().replaceAll("[\\[\\]]", "");
 	}
 
-
-
+	public static HashMap<String, Integer> printFrequencies(words) {
+		HashMap<String, Integer> frequencies = new HashMap<String, Integer>();
+		for (int i = 0; i < words.length; i++) {
+			String word = words[i];
+			frequencies.put(word, frequencies.getOrDefault(word, 0) + 1);
+		}
+		return frequencies;
+	}
 }
+
