@@ -1,6 +1,5 @@
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashMap;
 
 public class ProblemSet {
@@ -23,31 +22,33 @@ public class ProblemSet {
 			else if (letter == ' ') {
 				spaceCount++;
 			}
+			
 		}
 
-		String[] words = userInput.split(" ");
-
+		String cleanedUserInput = userInput.replaceAll("[^a-z ]", "");  // Remvoe all non letters
+		String[] words = cleanedUserInput.split(" ");
 		int wordCount = words.length;
 
-		shortestWordsLength = words[0].length();
-		shortestWords.add(words[0]);
-
-		double averageLength = (double)(characters-spaceCount)/wordCount; // placeholder
+		double averageLength = (double)(cleanedUserInput.length()-spaceCount)/wordCount;  // letters/words
 		int sentenceCount = userInput.split("[.?!]").length;
 
-
-		System.out.println("Total Characters:" + characters
-						   + "\nTotal Words:" + wordCount
-						   + "\nTotal Vowels:" + vowelCount
-						   + "\nTotal Spaces:" + spaceCount);
-
+		// Present basic text data
+		System.out.println("Total Characters: " + characters
+						   + "\nTotal Words: " + wordCount
+						   + "\nTotal Vowels: " + vowelCount
+						   + "\nTotal Spaces: " + spaceCount);
 		System.out.println("\nWord Frequency:\n");
+
+		ArrayList<String> filteredWords = cleanWords(words);  // Remove specific common words
+		HashMap<String, Integer> frequencies = getFrequencies(filteredWords);
+
+		// Print freqencies of words
 		for (String word: frequencies.keySet()) {
 			System.out.println(word + " - " + frequencies.get(word));
 		}
 
-		System.out.println("Longest Word: " + findLongestWord(words)
-						   + "\nShortest Word: " + shortestWords.toString()
+		System.out.println("\nLongest Word: " + findLongestWord(filteredWords)
+						   + "\nShortest Word: " + findShortestWord(filteredWords)
 						   + "\nAverage Word Length: " + averageLength
 						   + "\nNumber of Sentences: " + sentenceCount
 						   + "\nUnique Words: " + frequencies.size()
@@ -55,14 +56,15 @@ public class ProblemSet {
 
 	}
 
-	public static String findLongestWord(String[] words) {
+	public static String findLongestWord(ArrayList<String> filteredWords) {
 		ArrayList<String> longestWords = new ArrayList<String>();
 		int longestWordsLength = 0;
-		for (String word: words) {
+
+		for (String word: filteredWords) {
 			if (word.length() > longestWordsLength) {
-					longestWordsLength = word.length();
-					longestWords.clear();;
-					longestWords.add(word);
+					longestWordsLength = word.length();  // New current longest length
+					longestWords.clear();  // Remove old longest words
+					longestWords.add(word);  
 			} else if (word.length() == longestWordsLength) {
 				longestWords.add(word);
 			}
@@ -71,11 +73,13 @@ public class ProblemSet {
 		return longestWords.toString().replaceAll("[\\[\\]]", "");
 	}
 
-	public static String findShortestWord(String[] words) {
+	public static String findShortestWord(ArrayList<String> filteredWords) {
 		ArrayList<String> shortestWords = new ArrayList<String>();
-		int shortestWordsLength;
+		int shortestWordsLength = filteredWords.get(0).length();
+		shortestWords.add(filteredWords.get(0));
 
-		for (String word: words) {
+		for (int i = 1; i < filteredWords.size(); i++) {
+			String word = filteredWords.get(i);
 			if (word.length() < shortestWordsLength) {
 					shortestWordsLength = word.length();
 					shortestWords.clear();;
@@ -87,13 +91,31 @@ public class ProblemSet {
 		return shortestWords.toString().replaceAll("[\\[\\]]", "");
 	}
 
-	public static HashMap<String, Integer> printFrequencies(words) {
+	public static HashMap<String, Integer> getFrequencies(ArrayList<String> filteredWords) {
 		HashMap<String, Integer> frequencies = new HashMap<String, Integer>();
-		for (int i = 0; i < words.length; i++) {
-			String word = words[i];
+		for (String word: filteredWords) {
 			frequencies.put(word, frequencies.getOrDefault(word, 0) + 1);
 		}
 		return frequencies;
 	}
+
+	public static ArrayList<String> cleanWords(String[] words) {
+		ArrayList<String> ignoredWords = new ArrayList<>();
+		ArrayList<String> cleanedWords = new ArrayList<>();
+		ignoredWords.add("is");
+		ignoredWords.add("and");
+		ignoredWords.add("the");
+		ignoredWords.add("a");
+		ignoredWords.add("i");
+		ignoredWords.add("");
+		for (String word: words) {
+			if (!ignoredWords.contains(word)) {
+				cleanedWords.add(word);
+			}
+		}
+		return cleanedWords;
+
+	}
+
 }
 
