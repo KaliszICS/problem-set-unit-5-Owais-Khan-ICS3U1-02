@@ -8,6 +8,10 @@ public class ProblemSet {
 		Scanner input = new Scanner(System.in);
 		System.out.println("Welcome to the Text Analyzer.\nPlease enter a sentence or paragraph:\n");
 		String userInput = input.nextLine().toLowerCase();
+		textAnalysis(userInput);
+	}
+
+	public static void textAnalysis(String userInput) {
 
 		int characters = userInput.length();
 		int spaceCount = 0;
@@ -25,21 +29,27 @@ public class ProblemSet {
 			
 		}
 
-		String cleanedUserInput = userInput.replaceAll("[^a-z ]", "");  // Remvoe all non letters
+		// Keep spaces and alphanumeric characters
+		String cleanedUserInput = userInput.replaceAll("[^a-z0-9 ]+", "");
+		
 		String[] words = cleanedUserInput.split(" ");
-		int wordCount = words.length;
 
-		double averageLength = (double)(cleanedUserInput.length()-spaceCount)/wordCount;  // letters/words
-		int sentenceCount = userInput.split("[.?!]").length;
+		int wordCount = words.length;
+		if (words.equals("")) {
+			wordCount = 0;
+		}
+		
+		double averageLength = (double)(cleanedUserInput.length()-spaceCount)/wordCount;
+		int sentenceCount = userInput.split("[.?!]+").length;
 
 		// Present basic text data
-		System.out.println("Total Characters: " + characters
+		System.out.println("\nTotal Characters: " + characters
 						   + "\nTotal Words: " + wordCount
 						   + "\nTotal Vowels: " + vowelCount
 						   + "\nTotal Spaces: " + spaceCount);
 		System.out.println("\nWord Frequency:\n");
 
-		ArrayList<String> filteredWords = cleanWords(words);  // Remove specific common words
+		ArrayList<String> filteredWords = cleanWords(words);  // Remove specified common words
 		HashMap<String, Integer> frequencies = getFrequencies(filteredWords);
 
 		// Print freqencies of words
@@ -47,18 +57,22 @@ public class ProblemSet {
 			System.out.println(word + " - " + frequencies.get(word));
 		}
 
-		System.out.println("\nLongest Word: " + findLongestWord(filteredWords)
+		System.out.println("Longest Word: " + findLongestWord(filteredWords)
 						   + "\nShortest Word: " + findShortestWord(filteredWords)
 						   + "\nAverage Word Length: " + averageLength
 						   + "\nNumber of Sentences: " + sentenceCount
 						   + "\nUnique Words: " + frequencies.size()
 		);
-
 	}
 
 	public static String findLongestWord(ArrayList<String> filteredWords) {
+
+		if (filteredWords.isEmpty()) {
+        	return "";
+    	}
+
 		ArrayList<String> longestWords = new ArrayList<String>();
-		int longestWordsLength = 0;
+		int longestWordsLength = 0;  // Assume the longest word has 0 length
 
 		for (String word: filteredWords) {
 			if (word.length() > longestWordsLength) {
@@ -74,15 +88,22 @@ public class ProblemSet {
 	}
 
 	public static String findShortestWord(ArrayList<String> filteredWords) {
+
+		if (filteredWords.isEmpty()) {
+        	return "";
+    	}
+
 		ArrayList<String> shortestWords = new ArrayList<String>();
+
+		// Assume the first word to be the shortest
 		int shortestWordsLength = filteredWords.get(0).length();
 		shortestWords.add(filteredWords.get(0));
 
 		for (int i = 1; i < filteredWords.size(); i++) {
 			String word = filteredWords.get(i);
 			if (word.length() < shortestWordsLength) {
-					shortestWordsLength = word.length();
-					shortestWords.clear();;
+					shortestWordsLength = word.length(); // New current shortest length
+					shortestWords.clear();  // Remove old shortest words
 					shortestWords.add(word);
 			} else if (word.length() == shortestWordsLength) {
 				shortestWords.add(word);
@@ -107,7 +128,6 @@ public class ProblemSet {
 		ignoredWords.add("the");
 		ignoredWords.add("a");
 		ignoredWords.add("i");
-		ignoredWords.add("");
 		for (String word: words) {
 			if (!ignoredWords.contains(word)) {
 				cleanedWords.add(word);
