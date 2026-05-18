@@ -30,17 +30,19 @@ public class ProblemSet {
 		}
 
 		// Keep spaces and alphanumeric characters
-		String cleanedUserInput = userInput.replaceAll("[^a-z0-9 ]+", "");
+		String cleanedUserInput = userInput.replaceAll("[^a-z0-9 ]", "");
 		
-		String[] words = cleanedUserInput.split(" ");
+		String[] words = cleanedUserInput.split(" +");
 
 		int wordCount = words.length;
-		if (words.equals("")) {
-			wordCount = 0;
-		}
-		
 		double averageLength = (double)(cleanedUserInput.length()-spaceCount)/wordCount;
 		int sentenceCount = userInput.split("[.?!]+").length;
+
+		if (userInput.isEmpty()) {
+			wordCount = 0;
+			sentenceCount = 0;
+			averageLength = 0.0;
+		}
 
 		// Present basic text data
 		System.out.println("\nTotal Characters: " + characters
@@ -128,6 +130,7 @@ public class ProblemSet {
 		ignoredWords.add("the");
 		ignoredWords.add("a");
 		ignoredWords.add("i");
+		ignoredWords.add("");
 		for (String word: words) {
 			if (!ignoredWords.contains(word)) {
 				cleanedWords.add(word);
